@@ -4,13 +4,11 @@
       <img
         class="display-block center"
         src="../assets/nerd-face_1f913.png"
-        alt=""
+        alt
       />
     </div>
     <div>
-      <h1 class="text-center">
-        Welcome to Nead Bro.
-      </h1>
+      <h1 class="text-center">Welcome to Nead Bro.</h1>
     </div>
     <div id="form" class="center">
       <el-form
@@ -21,19 +19,19 @@
         label-width="100px"
         class="demo-ruleForm"
       >
-        <el-form-item prop="pass" class="form-item" label="" label-width="0">
-          <label for="">Email address</label>
+        <el-form-item prop="email" class="form-item" label label-width="0">
+          <label for>Email address</label>
           <el-input
             type="text"
-            v-model="ruleForm.pass"
+            v-model="ruleForm.email"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="checkPass" class="form-item" label-width="0">
-          <label for="">Password</label>
+        <el-form-item prop="password" class="form-item" label-width="0">
+          <label for>Password</label>
           <el-input
             type="password"
-            v-model="ruleForm.checkPass"
+            v-model="ruleForm.password"
             autocomplete="off"
           ></el-input>
         </el-form-item>
@@ -50,60 +48,59 @@
   </div>
 </template>
 <script>
+import { reactive } from "@vue/composition-api";
+import {
+  stripSpecialChar,
+  validateEmail,
+  validatePW
+  //validateVCode
+} from "@u/validate.js";
+
 export default {
   name: "login",
-  data() {
-    var checkAge = (rule, value, callback) => {
+  setup(props, context) {
+    const ruleForm = reactive({
+      email: "",
+      password: "",
+      code: ""
+    });
+
+    const chekEmail = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("年龄不能为空"));
+        callback(new Error("Email cannot be empty."));
+      } else if (!validateEmail(value)) {
+        callback(new Error("Email format is not correct."));
+      } else {
+        callback();
       }
-      setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error("请输入数字值"));
+    };
+
+    const checkPW = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("Please enter password."));
+      } else {
+        ruleForm.password = stripSpecialChar(value);
+        value = ruleForm.password;
+        if (!validatePW(value)) {
+          callback(
+            new Error(
+              "Password must contains both char and number, 6~20 digits."
+            )
+          );
         } else {
-          if (value < 18) {
-            callback(new Error("必须年满18岁"));
-          } else {
-            callback();
-          }
+          callback();
         }
-      }, 1000);
-    };
-    var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else {
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
-        }
-        callback();
       }
     };
-    var validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error("两次输入密码不一致!"));
-      } else {
-        callback();
-      }
-    };
-    return {
-      ruleForm: {
-        pass: "",
-        checkPass: "",
-        age: ""
-      },
-      rules: {
-        pass: [{ validator: validatePass, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        age: [{ validator: checkAge, trigger: "blur" }]
-      }
-    };
-  },
-  methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+
+    const rules = reactive({
+      email: [{ validator: chekEmail, trigger: "blur" }],
+      password: [{ validator: checkPW, trigger: "blur" }]
+      //code: [{ validator: validateCode, trigger: "blur" }]
+    });
+
+    const submitForm = formName => {
+      context.$refs[formName].validate(valid => {
         if (valid) {
           alert("submit!");
         } else {
@@ -111,10 +108,18 @@ export default {
           return false;
         }
       });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    }
+    };
+
+    const resetForm = formName => {
+      context.$refs[formName].resetFields();
+    };
+
+    return {
+      ruleForm,
+      rules,
+      submitForm,
+      resetForm
+    };
   }
 };
 </script>

@@ -8,13 +8,61 @@
       </h1>
       <ul id="nav">
         <router-link to="/">Home</router-link>
-        <router-link to="/about">About</router-link>
-        <router-link to="/login">Login</router-link>
+        <router-link to="/manage" v-if="showControlPanel">Manage</router-link>
+        <div class="nav-item" v-if="currentUser">
+          <li>
+            <router-link to="/profile">{{ currentUser.username }}</router-link>
+          </li>
+          <li>
+            <a href @click="logOut">Logout</a>
+          </li>
+        </div>
+        <div class="nav-item" v-if="!currentUser">
+          <li>
+            <router-link to="/login">Signin</router-link>
+          </li>
+          <li>
+            <router-link to="/register">SignUp</router-link>
+          </li>
+        </div>
       </ul>
     </header>
     <router-view />
   </div>
 </template>
+
+<script>
+import { computed, onMounted } from "@vue/composition-api";
+
+export default {
+  name: "app",
+  setup(props, context) {
+    const currentUser = computed(() => {
+      return context.root.$store.state.auth.user;
+    });
+
+    const showControlPanel = computed(() => {
+      if (
+        currentUser !== null &&
+        currentUser.value !== null &&
+        currentUser.value.roles !== null
+      ) {
+        return currentUser.value.roles.includes("ROLE_MODERATOR");
+      }
+      return false;
+    });
+
+    const logOut = () => {
+      context.root.$store.dispatch("auth/logout");
+      context.root.$router.push("/login");
+    };
+
+    onMounted(() => {});
+
+    return { currentUser, showControlPanel, logOut };
+  }
+};
+</script>
 
 <style lang="scss">
 #app {
@@ -79,5 +127,9 @@ header {
       font-weight: bold;
     }
   }
+}
+
+.nav-item {
+  display: inline-block;
 }
 </style>

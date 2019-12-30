@@ -48,7 +48,7 @@
   </div>
 </template>
 <script>
-import { reactive } from "@vue/composition-api";
+import { reactive, onMounted } from "@vue/composition-api";
 import {
   stripSpecialChar,
   validateEmail,
@@ -56,13 +56,15 @@ import {
   //validateVCode
 } from "@u/validate.js";
 
+import User from "../models/user";
+
 export default {
   name: "login",
   setup(props, context) {
     const ruleForm = reactive({
       email: "",
       password: "",
-      code: ""
+      username: ""
     });
 
     const chekEmail = (rule, value, callback) => {
@@ -100,19 +102,39 @@ export default {
     });
 
     const submitForm = formName => {
-      context.$refs[formName].validate(valid => {
-        if (valid) {
-          alert("submit!");
-        } else {
+      context.refs[formName].validate(valid => {
+        if (!valid) {
           console.log("error submit!!");
           return false;
         }
+
+        console.log(" begin submit!!");
+        let user = new User();
+        user.username = "zilong";
+        user.email = "zilong919@163.com";
+        user.password = "hu5253627";
+        context.root.$store.dispatch("auth/login", user).then(
+          () => {
+            console.log("login success!");
+            context.root.$router.push("/");
+          },
+          error => {
+            console.log(error.message);
+            return false;
+          }
+        );
       });
     };
 
     const resetForm = formName => {
       context.$refs[formName].resetFields();
     };
+
+    onMounted(() => {
+      if (context.root.$store.state.auth.status.loggedIn) {
+        return context.root.$router.push("/profile");
+      }
+    });
 
     return {
       ruleForm,

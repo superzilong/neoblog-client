@@ -11,11 +11,11 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    redirect: "/home"
+    name: "home",
+    component: Home
   },
   {
     path: "/home",
-    name: "home",
     component: Home
   },
   {
@@ -45,17 +45,18 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  const publicPages = ["/", "/home", "/login", "/register"];
-  const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem("NerdBro-User");
+// router.beforeEach((to, from, next) => {
+//   const publicPages = ["/", "/home", "/login", "/register"];
+//   const authRequired = !publicPages.includes(to.path);
+//   const loggedIn = localStorage.getItem("NerdBro-User");
 
-  // try to access a restricted page + not logged in
-  if (authRequired && !loggedIn) {
-    return next("/login");
-  }
-
-  next();
-});
+//   // try to access a restricted page + not logged in
+//   if (authRequired && !loggedIn) {
+//     return next("/login");
+//   }
+//   console.log(to);
+//   console.log(from);
+//   next();
+// });
 
 export default router;

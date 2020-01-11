@@ -1,49 +1,51 @@
 <template>
   <div class="login">
     <div>
-      <img
-        class="display-block center"
-        src="../assets/nerd-face_1f913.png"
-        alt
-      />
-    </div>
-    <div>
-      <h1 class="text-center">Welcome to Nead Bro.</h1>
-    </div>
-    <div id="form" class="center">
-      <el-form
-        :model="ruleForm"
-        status-icon
-        :rules="rules"
-        ref="ruleForm"
-        label-width="100px"
-        class="demo-ruleForm"
-      >
-        <el-form-item prop="email" class="form-item" label label-width="0">
-          <label for>Email address</label>
-          <el-input
-            type="text"
-            v-model="ruleForm.email"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="password" class="form-item" label-width="0">
-          <label for>Password</label>
-          <el-input
-            type="password"
-            v-model="ruleForm.password"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
-        <div class="submit-button">
-          <el-button
-            type="success"
-            class="form-item"
-            @click="submitForm('ruleForm')"
-            >Sign in</el-button
-          >
-        </div>
-      </el-form>
+      <div>
+        <img
+          class="display-block center"
+          src="../assets/nerd-face_1f913.png"
+          alt
+        />
+      </div>
+      <div>
+        <h1 class="text-center">Welcome to Nead Bro.</h1>
+      </div>
+      <div id="form" class="center">
+        <el-form
+          :model="ruleForm"
+          status-icon
+          :rules="rules"
+          ref="loginForm"
+          label-width="100px"
+          class="demo-ruleForm"
+        >
+          <el-form-item prop="email" class="form-item" label label-width="0">
+            <label for>Email address</label>
+            <el-input
+              type="text"
+              v-model="ruleForm.email"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="password" class="form-item" label-width="0">
+            <label for>Password</label>
+            <el-input
+              type="password"
+              v-model="ruleForm.password"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <div class="submit-button">
+            <el-button
+              type="success"
+              class="form-item"
+              @click="submitForm('loginForm')"
+              >Sign in</el-button
+            >
+          </div>
+        </el-form>
+      </div>
     </div>
   </div>
 </template>
@@ -64,10 +66,15 @@ export default {
     const ruleForm = reactive({
       email: "",
       password: "",
-      username: ""
+      username: "11"
     });
+    // console.log("store.auth");
+    // console.log(context.root.$store.state.auth);
+    // const loggedIn = computed(() => {
+    //   return context.root.$store.state.auth.status.loggedIn;
+    // });
 
-    const chekEmail = (rule, value, callback) => {
+    let chekEmail = (rule, value, callback) => {
       if (!value) {
         callback(new Error("Email cannot be empty."));
       } else if (!validateEmail(value)) {
@@ -77,7 +84,7 @@ export default {
       }
     };
 
-    const checkPW = (rule, value, callback) => {
+    let checkPW = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("Please enter password."));
       } else {
@@ -116,7 +123,7 @@ export default {
         context.root.$store.dispatch("auth/login", user).then(
           () => {
             console.log("login success!");
-            context.root.$router.push("/");
+            context.root.$router.push("/profile");
           },
           error => {
             console.log(error.message);
@@ -126,21 +133,28 @@ export default {
       });
     };
 
-    const resetForm = formName => {
-      context.$refs[formName].resetFields();
-    };
+    // const resetForm = formName => {
+    //   context.$refs[formName].resetFields();
+    // };
 
     onMounted(() => {
-      if (context.root.$store.state.auth.status.loggedIn) {
-        return context.root.$router.push("/profile");
-      }
+      //console.log(loggedIn.value);
+      console.log(ruleForm.email);
+      console.log(ruleForm.username);
+      console.log(ruleForm.password);
+      // console.log("store.auth");
+      // console.log(process.env.NODE_ENV);
+      // console.log(context.root.$store.state.auth);
+      //if (loggedIn.value) {
+      // return context.root.$router.push("/profile");
+      //}
     });
 
     return {
       ruleForm,
       rules,
-      submitForm,
-      resetForm
+      submitForm
+      // resetForm
     };
   }
 };

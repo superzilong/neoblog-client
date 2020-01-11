@@ -1,8 +1,6 @@
 import AuthService from "../service/auth.service";
 
-console.log(localStorage.getItem("NerdBro-User"));
 const user = JSON.parse(localStorage.getItem("NerdBro-User"));
-console.log(user);
 const initState = user
   ? { status: { loggedIn: true }, user }
   : { status: { loggedIn: false }, user: null };
@@ -25,8 +23,15 @@ export const auth = {
     },
 
     logout({ commit }) {
-      AuthService.logout();
-      commit("logout");
+      return new Promise((resolve, reject) => {
+        AuthService.logout();
+        commit("logout");
+        resolve();
+        var t = false;
+        if (t) {
+          reject();
+        }
+      });
     },
 
     register({ commit }, user) {
@@ -50,21 +55,23 @@ export const auth = {
     },
 
     loginFail(state) {
-      state.status = {};
+      state.status = { loggedIn: false };
       state.user = null;
     },
 
     logout(state) {
-      state.status = {};
+      state.status = { loggedIn: false };
       state.user = null;
     },
 
     registerSuccess(state) {
-      state.status = {};
+      state.status = { loggedIn: false };
+      state.user = null;
     },
 
     registerFail(state) {
-      state.status = {};
+      state.status = { loggedIn: false };
+      state.user = null;
     }
   }
 };

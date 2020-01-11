@@ -1,33 +1,39 @@
 <template>
   <div id="app">
     <header class="clearfix">
-      <h1 id="logo">
-        <router-link to="/" titile="Your Nerd Brother">
+      <h1 id="logo" class="pull-left">
+        <router-link to="/" title="Your Nerd Brother">
           <img src="./assets/logo.png" alt="Your Nerd Brother" />
         </router-link>
       </h1>
-      <ul id="nav">
-        <router-link to="/">Home</router-link>
-        <router-link to="/manage" v-if="showControlPanel">Manage</router-link>
-        <div class="nav-item" v-if="currentUser">
-          <li>
-            <router-link to="/profile">{{ currentUser.username }}</router-link>
-          </li>
-          <li>
-            <a href @click="logOut">Logout</a>
-          </li>
-        </div>
-        <div class="nav-item" v-if="!currentUser">
-          <li>
-            <router-link to="/login">Signin</router-link>
-          </li>
-          <li>
-            <router-link to="/register">SignUp</router-link>
-          </li>
-        </div>
-      </ul>
+      <el-menu
+        :default-active="$route.path"
+        class="height-equal pull-right"
+        mode="horizontal"
+        background-color="#333"
+        text-color="#fff"
+        active-text-color="yellow"
+        router
+      >
+        <el-menu-item id="home" index="/home">Home</el-menu-item>
+        <el-submenu id="manage" index="2" v-if="showControlPanel">
+          <template slot="title">Manage</template>
+          <el-menu-item index="/manage">Article</el-menu-item>
+          <el-menu-item index="2-2">Category</el-menu-item>
+          <el-menu-item index="2-3">User</el-menu-item>
+        </el-submenu>
+        <el-submenu id="profile" index="3" v-if="currentUser">
+          <template slot="title">{{ username }}</template>
+          <el-menu-item index="/profile">Setting</el-menu-item>
+          <el-menu-item @click="logOut">Logout</el-menu-item>
+        </el-submenu>
+        <el-menu-item id="login" index="/login" v-if="!currentUser"
+          >Signin</el-menu-item
+        >
+      </el-menu>
     </header>
-    <router-view />
+
+    <div><router-view /></div>
   </div>
 </template>
 
@@ -39,6 +45,14 @@ export default {
   setup(props, context) {
     const currentUser = computed(() => {
       return context.root.$store.state.auth.user;
+    });
+
+    const username = computed(() => {
+      if (currentUser.value !== null) {
+        return currentUser.value.username;
+      } else {
+        return "";
+      }
     });
 
     const showControlPanel = computed(() => {
@@ -54,12 +68,14 @@ export default {
 
     const logOut = () => {
       context.root.$store.dispatch("auth/logout");
-      context.root.$router.push("/login");
+      context.root.$router.push({
+        name: "login"
+      });
     };
 
     onMounted(() => {});
 
-    return { currentUser, showControlPanel, logOut };
+    return { currentUser, username, showControlPanel, logOut };
   }
 };
 </script>
@@ -94,8 +110,7 @@ header {
 }
 
 #logo {
-  float: left;
-  margin-top: 15px;
+  margin-top: 24px;
   margin-bottom: 15px;
   margin-left: 30px;
   img {
@@ -103,33 +118,39 @@ header {
   }
 }
 
-#nav {
-  list-style-type: none;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
+.pull-left {
+  float: left;
+}
+
+.pull-right {
   float: right;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  margin-right: 30px;
+}
 
-  a {
-    display: inline-block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-family: monospace;
-    font-size: 18px;
+.height-equal {
+  height: 100px;
+}
 
-    &.router-link-exact-active {
-      color: yellow;
-      font-weight: bold;
-    }
+#home {
+  height: 100px;
+  line-height: 100px;
+}
+
+#manage {
+  div {
+    height: 100px;
+    line-height: 100px;
   }
 }
 
-.nav-item {
-  display: inline-block;
+#profile {
+  div {
+    height: 100px;
+    line-height: 100px;
+  }
+}
+
+#login {
+  height: 100px;
+  line-height: 100px;
 }
 </style>

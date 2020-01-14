@@ -5,17 +5,18 @@ import Login from "../views/Login.vue";
 import Profile from "../views/Profile.vue";
 import Manage from "../views/Manage.vue";
 import Register from "../views/Register.vue";
+import Article from "../views/Article.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: Home
+    redirect: "/home"
   },
   {
     path: "/home",
+    name: "home",
     component: Home
   },
   {
@@ -38,6 +39,10 @@ const routes = [
     path: "/register",
     name: "register",
     component: Register
+  },
+  {
+    path: "/articles/:id",
+    component: Article
   }
 ];
 

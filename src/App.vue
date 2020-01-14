@@ -33,7 +33,7 @@
       </el-menu>
     </header>
 
-    <div><router-view /></div>
+    <div><router-view id="container" /></div>
   </div>
 </template>
 
@@ -152,5 +152,9 @@ header {
 #login {
   height: 100px;
   line-height: 100px;
+}
+
+#container {
+  min-height: 900px;
 }
 </style>

@@ -77,7 +77,7 @@ export default {
     margin: 50px 20px 0px;
     padding: 10px 0;
     text-decoration: none;
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    // font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 30px;
     font-weight: 800;
     line-height: 1.1;

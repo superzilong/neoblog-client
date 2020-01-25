@@ -61,7 +61,10 @@ export default {
         currentUser.value !== null &&
         currentUser.value.roles !== null
       ) {
-        return currentUser.value.roles.includes("ROLE_MODERATOR");
+        return (
+          currentUser.value.roles.includes("ROLE_MODERATOR") ||
+          currentUser.value.roles.includes("ROLE_ADMIN")
+        );
       }
       return false;
     });
@@ -156,5 +159,19 @@ header {
 
 #container {
   min-height: 900px;
+}
+
+.el-menu-item,
+.el-submenu,
+.el-menu,
+.el-submenu__title {
+  font-size: 18px !important;
+  // font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+  //   "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+
+[font-family] {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 </style>

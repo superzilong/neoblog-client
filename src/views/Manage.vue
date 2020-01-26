@@ -75,8 +75,6 @@ export default {
       let xmlString = "<div>" + context.refs.edit.compiledMarkdown + "</div>";
       let doc = new DOMParser().parseFromString(xmlString, "text/html");
       let title = doc.getElementsByTagName("h1")[0].innerHTML;
-      console.log(xmlString);
-      console.log("title: " + title);
       articeSvc
         .createArticle(
           title,
@@ -93,8 +91,7 @@ export default {
             }
           },
           error => {
-            console.log(error.toString());
-            alert("publish fail!");
+            alert("publish fail:" + error.toString());
           }
         );
     };

@@ -37,10 +37,9 @@ export default {
     articleSrc.getArticleList().then(
       response => {
         this.articles = response.data;
-        console.log(response.data);
       },
       error => {
-        console.log(error);
+        alert(error.toString());
       }
     );
     // axios

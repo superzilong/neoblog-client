@@ -50,7 +50,7 @@
   </div>
 </template>
 <script>
-import { reactive, onMounted } from "@vue/composition-api";
+import { reactive, onMounted, computed } from "@vue/composition-api";
 import {
   stripSpecialChar,
   validateEmail,
@@ -68,11 +68,10 @@ export default {
       password: "",
       username: "11"
     });
-    // console.log("store.auth");
-    // console.log(context.root.$store.state.auth);
-    // const loggedIn = computed(() => {
-    //   return context.root.$store.state.auth.status.loggedIn;
-    // });
+
+    const loggedIn = computed(() => {
+      return context.root.$store.state.auth.status.loggedIn;
+    });
 
     let chekEmail = (rule, value, callback) => {
       if (!value) {
@@ -111,22 +110,19 @@ export default {
     const submitForm = formName => {
       context.refs[formName].validate(valid => {
         if (!valid) {
-          console.log("error submit!!");
           return false;
         }
 
-        console.log(" begin submit!!");
         let user = new User();
         user.username = "";
         user.email = ruleForm.email;
         user.password = ruleForm.password;
         context.root.$store.dispatch("auth/login", user).then(
           () => {
-            console.log("login success!");
             context.root.$router.push("/profile");
           },
           error => {
-            console.log(error.message);
+            alert(error.toString());
             return false;
           }
         );
@@ -138,16 +134,9 @@ export default {
     // };
 
     onMounted(() => {
-      //console.log(loggedIn.value);
-      console.log(ruleForm.email);
-      console.log(ruleForm.username);
-      console.log(ruleForm.password);
-      // console.log("store.auth");
-      // console.log(process.env.NODE_ENV);
-      // console.log(context.root.$store.state.auth);
-      //if (loggedIn.value) {
-      // return context.root.$router.push("/profile");
-      //}
+      if (loggedIn.value) {
+        return context.root.$router.push("/profile");
+      }
     });
 
     return {

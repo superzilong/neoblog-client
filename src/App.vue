@@ -25,7 +25,7 @@
         <el-submenu id="profile" index="3" v-if="currentUser">
           <template slot="title">{{ username }}</template>
           <el-menu-item index="/profile">Setting</el-menu-item>
-          <el-menu-item @click="logOut">Logout</el-menu-item>
+          <el-menu-item index="-1" @click="logOut">Logout</el-menu-item>
         </el-submenu>
         <el-menu-item id="login" index="/login" v-if="!currentUser"
           >Signin</el-menu-item
@@ -158,7 +158,8 @@ header {
 }
 
 #container {
-  min-height: 900px;
+  min-height: calc(100vh - 101px);
+  margin: 0;
 }
 
 .el-menu-item,

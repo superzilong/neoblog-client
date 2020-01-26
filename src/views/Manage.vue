@@ -1,6 +1,6 @@
 <template>
   <div class="manage">
-    <h1>{{ content.header }}</h1>
+    <div>{{ content.header }}</div>
     <el-button type="primary" size="medium" @click="handleOpen">New</el-button>
     <el-dialog
       title="New Blog"

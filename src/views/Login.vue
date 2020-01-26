@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div>
-      <div>
+      <div class="image">
         <img
           class="display-block center"
           src="../assets/nerd-face_1f913.png"
@@ -117,9 +117,9 @@ export default {
 
         console.log(" begin submit!!");
         let user = new User();
-        user.username = "zilong";
-        user.email = "zilong919@163.com";
-        user.password = "hu5253627";
+        user.username = "";
+        user.email = ruleForm.email;
+        user.password = ruleForm.password;
         context.root.$store.dispatch("auth/login", user).then(
           () => {
             console.log("login success!");
@@ -160,9 +160,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.login {
-  margin-top: 50px;
-  height: 900px;
+.image {
+  padding-top: 50px;
 }
 .display-block {
   display: block;
